@@ -15,9 +15,8 @@ public class ProdutoService {
    //Recebe um objeto e repassa para o repositorio 
    public Produto save(Produto produto) {
 
-       cliente.setHabilitado(Boolean.TRUE);
-       return repository.save(cliente);//cadastra um registo no banco e retorna um objeto que foi cadastrado
+       produto.setHabilitado(Boolean.TRUE);
+       return repository.save(produto);//cadastra um registo no banco e retorna um objeto que foi cadastrado
    }
 
 }
-
