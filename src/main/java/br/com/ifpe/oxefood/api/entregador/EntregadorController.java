@@ -1,0 +1,33 @@
+package br.com.ifpe.oxefood.api.entregador;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.ifpe.oxefood.modelo.entregador.Entregador;
+import br.com.ifpe.oxefood.modelo.entregador.EntregadorService;
+
+
+@RestController //Torna uma classe que pode especificar um endPoint
+@RequestMapping("/api/entregador")// especifica a url que vou acionar 
+@CrossOrigin//poderarr receber requisições de um cliente especifico(FrontEnd react)
+public class EntregadorController {
+
+   @Autowired
+   private EntregadorService entregadorService;
+
+   @PostMapping
+   public ResponseEntity<Entregador> save(@RequestBody EntregadorRequest request) {
+
+    //    Cliente ClienteEntrada = request.build();
+    //    Cliente cliente = clienteService.save(ClienteEntrada);
+
+       Entregador entregador = entregadorService.save(request.build());
+       return new ResponseEntity<Entregador>(entregador, HttpStatus.CREATED);
+   }
+}
