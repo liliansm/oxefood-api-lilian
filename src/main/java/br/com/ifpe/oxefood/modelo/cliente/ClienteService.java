@@ -1,9 +1,11 @@
 package br.com.ifpe.oxefood.modelo.cliente;
 
-import jakarta.transaction.Transactional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
 
 @Service //o que torna ela um service é a notação @Service ou @Controler
 public class ClienteService {
@@ -18,5 +20,30 @@ public class ClienteService {
        cliente.setHabilitado(Boolean.TRUE);
        return repository.save(cliente);//cadastra um registo no banco e retorna um objeto que foi cadastrado
    }
+
+   public List<Cliente> listarTodos() {
+  
+    return repository.findAll();
+   }
+
+    public Cliente obterPorID(Long id) {
+
+      return repository.findById(id).get();
+    }
+
+    @Transactional
+    public void update(Long id, Cliente clienteAlterado) {
+
+      Cliente cliente = repository.findById(id).get();
+      cliente.setNome(clienteAlterado.getNome());
+      cliente.setDataNascimento(clienteAlterado.getDataNascimento());
+      cliente.setCpf(clienteAlterado.getCpf());
+      cliente.setFoneCelular(clienteAlterado.getFoneCelular());
+      cliente.setFoneFixo(clienteAlterado.getFoneFixo());
+	    
+      repository.save(cliente);
+    }
+ 
+
 
 }
