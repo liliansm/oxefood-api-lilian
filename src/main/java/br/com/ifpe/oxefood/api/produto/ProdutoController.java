@@ -62,6 +62,7 @@ public class ProdutoController {
        Produto produto = request.build();
        produto.setCategoria(categoriaProdutoService.obterPorID(request.getIdCategoria()));
        produtoService.update(id, produto);
+       
        return ResponseEntity.ok().build();
     }
 
