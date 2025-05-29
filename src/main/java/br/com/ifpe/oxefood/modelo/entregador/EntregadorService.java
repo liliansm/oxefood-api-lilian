@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.ifpe.oxefood.modelo.cliente.Cliente;
 import jakarta.transaction.Transactional;
 
 @Service //o que torna ela um service é a notação @Service ou @Controler
@@ -54,6 +55,17 @@ public class EntregadorService {
 	    
       repository.save(entregador);
     }
+
+    
+   @Transactional
+   public void delete(Long id) {
+
+       Entregador entregador = repository.findById(id).get();
+       entregador.setHabilitado(Boolean.FALSE);
+
+       repository.save(entregador);
+   }
+
 
 
 }
