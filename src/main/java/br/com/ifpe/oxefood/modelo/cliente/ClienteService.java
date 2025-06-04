@@ -110,6 +110,11 @@ public class ClienteService {
        repository.save(cliente);
    }
 
+    public List<EnderecoCliente> listarEnderecosDoCliente(Long clienteId) {
+        Cliente cliente = repository.findById(clienteId)
+            .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
+        return cliente.getEnderecos();
+    }
 
 }

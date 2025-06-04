@@ -88,5 +88,13 @@ public class ClienteController {
        return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/endereco/{clienteId}")
+    public ResponseEntity<List<EnderecoCliente>> listarEnderecosCliente(@PathVariable("clienteId") Long clienteId) {
+    
+      List<EnderecoCliente> enderecos = clienteService.listarEnderecosDoCliente(clienteId);
+      return new ResponseEntity<>(enderecos, HttpStatus.OK);
+}
+
+
 }
 
