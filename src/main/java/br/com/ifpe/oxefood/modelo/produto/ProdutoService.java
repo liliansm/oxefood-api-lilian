@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import br.com.ifpe.oxefood.util.exception.ProdutoException;
 import jakarta.transaction.Transactional;
 
 @Service //o que torna ela um service é a notação @Service ou @Controler
@@ -16,7 +16,11 @@ public class ProdutoService {
 
    @Transactional //ou ele roda td em relação ao banco ou não faz nada, se uma delas falhar as outras são desfeitas
    //Recebe um objeto e repassa para o repositorio 
-   public Produto save(Produto produto) {
+   public Produto save(Produto produto){
+
+      if (produto.getValorUnitario() < 20 || produto.getValorUnitario() > 100) {
+        throw new ProdutoException(ProdutoException.MSG_VALOR_MINIMO_PRODUTO);
+    }
 
        produto.setHabilitado(Boolean.TRUE);
        return repository.save(produto);//cadastra um registo no banco e retorna um objeto que foi cadastrado

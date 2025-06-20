@@ -30,7 +30,7 @@ public class ClienteController {
    private ClienteService clienteService;
 
    @PostMapping
-   public ResponseEntity<Cliente> save(@RequestBody ClienteRequest request) {
+   public ResponseEntity<Cliente> save(@RequestBody @Valid ClienteRequest request) {
 
     //    Cliente ClienteEntrada = request.build();
     //    Cliente cliente = clienteService.save(ClienteEntrada);
@@ -54,7 +54,7 @@ public class ClienteController {
     //Esse método recebe o ID do cliente que será alterado e um objeto do tipo ClienteRequest contendo os dados alterados do cliente. No corpo do método, um objeto Cliente é criado com método build() a partir da classe do Request e esse objeto criado é enviado para o service.
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> update(@PathVariable("id") Long id, @RequestBody ClienteRequest request) {
+    public ResponseEntity<Cliente> update(@PathVariable("id") Long id, @RequestBody @Valid ClienteRequest request) {
 
        clienteService.update(id, request.build());
        return ResponseEntity.ok().build();

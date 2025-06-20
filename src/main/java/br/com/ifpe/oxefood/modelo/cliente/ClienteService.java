@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.ifpe.oxefood.util.exception.ClienteException;
+import br.com.ifpe.oxefood.util.exception.ProdutoException;
 import jakarta.transaction.Transactional;
 
 @Service //o que torna ela um service é a notação @Service ou @Controler
@@ -20,6 +22,10 @@ public class ClienteService {
    @Transactional //ou ele roda td em relação ao banco ou não faz nada, se uma delas falhar as outras são desfeitas
    //Recebe um objeto e repassa para o repositorio 
    public Cliente save(Cliente cliente) {
+
+      if (cliente.getFoneCelular() == null || !cliente.getFoneCelular().startsWith("81")) {
+        throw new ClienteException(ClienteException.MSG_TELEFONE_SEM_PREFIXO);
+    }
 
        cliente.setHabilitado(Boolean.TRUE);
        return repository.save(cliente);//cadastra um registo no banco e retorna um objeto que foi cadastrado
