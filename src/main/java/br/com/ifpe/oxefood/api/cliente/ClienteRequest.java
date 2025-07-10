@@ -64,6 +64,7 @@ public class ClienteRequest {
 
    //instancia um objeto do tipo cliente, com os atributos de cliente para o request
    public Cliente build() {
+        // Cliente c = Cliente.builder()
         return Cliente.builder()
            .usuario(buildUsuario())
            .nome(nome)

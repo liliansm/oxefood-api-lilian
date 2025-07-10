@@ -6,6 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.ifpe.oxefood.modelo.acesso.Perfil;
+import br.com.ifpe.oxefood.modelo.acesso.PerfilRepository;
+import br.com.ifpe.oxefood.modelo.acesso.Usuario;
+import br.com.ifpe.oxefood.modelo.acesso.UsuarioService;
 import br.com.ifpe.oxefood.util.exception.ClienteException;
 import br.com.ifpe.oxefood.util.exception.ProdutoException;
 import jakarta.transaction.Transactional;
@@ -19,15 +23,31 @@ public class ClienteService {
    @Autowired //Instacia um objeto em tempo de execução, não precisa fazer o new na mão, é mais rapido
    private EnderecoClienteRepository enderecoClienteRepository;
 
+   @Autowired
+   private UsuarioService usuarioService;
+
+   @Autowired
+   private PerfilRepository perfilUsuarioRepository;
+
+
    @Transactional //ou ele roda td em relação ao banco ou não faz nada, se uma delas falhar as outras são desfeitas
    //Recebe um objeto e repassa para o repositorio 
-   public Cliente save(Cliente cliente) {
+   public Cliente save(Cliente cliente, Usuario usuarioLogado) {
+
+    usuarioService.save(cliente.getUsuario());
+
+      for (Perfil perfil : cliente.getUsuario().getRoles()) {
+           perfil.setHabilitado(Boolean.TRUE);
+           perfilUsuarioRepository.save(perfil);
+      }
+
 
       if (cliente.getFoneCelular() == null || !cliente.getFoneCelular().startsWith("81")) {
         throw new ClienteException(ClienteException.MSG_TELEFONE_SEM_PREFIXO);
     }
 
        cliente.setHabilitado(Boolean.TRUE);
+       cliente.setCriadoPor(usuarioLogado);
        return repository.save(cliente);//cadastra um registo no banco e retorna um objeto que foi cadastrado
    }
 
@@ -42,7 +62,7 @@ public class ClienteService {
     }
 
     @Transactional
-    public void update(Long id, Cliente clienteAlterado) {
+    public void update(Long id, Cliente clienteAlterado, Usuario usuarioLogado) {
 
       Cliente cliente = repository.findById(id).get();
       cliente.setNome(clienteAlterado.getNome());
@@ -50,6 +70,8 @@ public class ClienteService {
       cliente.setCpf(clienteAlterado.getCpf());
       cliente.setFoneCelular(clienteAlterado.getFoneCelular());
       cliente.setFoneFixo(clienteAlterado.getFoneFixo());
+
+      cliente.setUltimaModificacaoPor(usuarioLogado);
 	    
       repository.save(cliente);
     }
