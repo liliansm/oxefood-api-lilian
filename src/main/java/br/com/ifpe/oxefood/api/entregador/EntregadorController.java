@@ -19,49 +19,66 @@ import br.com.ifpe.oxefood.modelo.entregador.Entregador;
 import br.com.ifpe.oxefood.modelo.entregador.EntregadorService;
 import jakarta.validation.Valid;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-@RestController //Torna uma classe que pode especificar um endPoint
-@RequestMapping("/api/entregador")// especifica a url que vou acionar 
-@CrossOrigin//poderarr receber requisições de um cliente especifico(FrontEnd react)
+@RestController
+@RequestMapping("/api/entregador")
+@CrossOrigin
+@Tag(
+    name = "API Entregador",
+    description = "API responsável pelos serviços relacionados a entregadores no sistema."
+)
 public class EntregadorController {
 
    @Autowired
    private EntregadorService entregadorService;
 
    @PostMapping
+   @Operation(
+       summary = "Salvar novo entregador.",
+       description = "Cria um novo entregador no sistema com os dados fornecidos."
+   )
    public ResponseEntity<Entregador> save(@RequestBody @Valid EntregadorRequest request) {
-
-    //    Cliente ClienteEntrada = request.build();
-    //    Cliente cliente = clienteService.save(ClienteEntrada);
-
        Entregador entregador = entregadorService.save(request.build());
        return new ResponseEntity<Entregador>(entregador, HttpStatus.CREATED);
    }
 
    @GetMapping
-    public List<Entregador> listarTodos() {
+   @Operation(
+       summary = "Listar todos os entregadores.",
+       description = "Retorna uma lista com todos os entregadores cadastrados no sistema."
+   )
+   public List<Entregador> listarTodos() {
+       return entregadorService.listarTodos();
+   }
 
-        return entregadorService.listarTodos();
-    }
+   @GetMapping("/{id}")
+   @Operation(
+       summary = "Obter entregador por ID.",
+       description = "Retorna os dados de um entregador específico com base no ID informado."
+   )
+   public Entregador obterPorID(@PathVariable Long id) {
+       return entregadorService.obterPorID(id);
+   }
 
-    @GetMapping("/{id}")
-    public Entregador obterPorID(@PathVariable Long id) {
-
-        return entregadorService.obterPorID(id);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Entregador> update(@PathVariable("id") Long id, @RequestBody @Valid EntregadorRequest request) {
-
+   @PutMapping("/{id}")
+   @Operation(
+       summary = "Atualizar entregador por ID.",
+       description = "Atualiza os dados de um entregador existente com base no ID fornecido."
+   )
+   public ResponseEntity<Entregador> update(@PathVariable("id") Long id, @RequestBody @Valid EntregadorRequest request) {
        entregadorService.update(id, request.build());
-       return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-
-       entregadorService.delete(id);
        return ResponseEntity.ok().build();
    }
 
+   @DeleteMapping("/{id}")
+   @Operation(
+       summary = "Remover entregador por ID.",
+       description = "Remove um entregador do sistema com base no ID fornecido."
+   )
+   public ResponseEntity<Void> delete(@PathVariable Long id) {
+       entregadorService.delete(id);
+       return ResponseEntity.ok().build();
+   }
 }

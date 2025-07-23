@@ -19,11 +19,10 @@ public class UsuarioService implements UserDetailsService {
     @Autowired
     private UsuarioRepository repository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
     private JwtService jwtService;
-
-
-    private final PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
 
@@ -34,8 +33,7 @@ public class UsuarioService implements UserDetailsService {
         this.repository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-
-        public Usuario authenticate(String username, String password) {
+    public Usuario authenticate(String username, String password) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password));
@@ -63,7 +61,7 @@ public class UsuarioService implements UserDetailsService {
         return repository.save(user);
     }
 
-     public Usuario obterUsuarioLogado(HttpServletRequest request) {
+    public Usuario obterUsuarioLogado(HttpServletRequest request) {
 
         Usuario usuarioLogado = null;
         String authHeader = request.getHeader("Authorization");
@@ -80,5 +78,3 @@ public class UsuarioService implements UserDetailsService {
     }
 
 }
-
-

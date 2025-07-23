@@ -10,6 +10,7 @@ import br.com.ifpe.oxefood.modelo.acesso.Perfil;
 import br.com.ifpe.oxefood.modelo.acesso.PerfilRepository;
 import br.com.ifpe.oxefood.modelo.acesso.Usuario;
 import br.com.ifpe.oxefood.modelo.acesso.UsuarioService;
+import br.com.ifpe.oxefood.modelo.mensagens.EmailService;
 import br.com.ifpe.oxefood.util.exception.ClienteException;
 import br.com.ifpe.oxefood.util.exception.ProdutoException;
 import jakarta.transaction.Transactional;
@@ -29,6 +30,8 @@ public class ClienteService {
    @Autowired
    private PerfilRepository perfilUsuarioRepository;
 
+   @Autowired
+    private EmailService emailService;
 
    @Transactional //ou ele roda td em relação ao banco ou não faz nada, se uma delas falhar as outras são desfeitas
    //Recebe um objeto e repassa para o repositorio 
@@ -48,7 +51,13 @@ public class ClienteService {
 
        cliente.setHabilitado(Boolean.TRUE);
        cliente.setCriadoPor(usuarioLogado);
-       return repository.save(cliente);//cadastra um registo no banco e retorna um objeto que foi cadastrado
+      //  return repository.save(cliente);//cadastra um registo no banco e retorna um objeto que foi cadastrado
+
+      Cliente c = repository.save(cliente);
+
+          emailService.enviarEmailConfirmacaoCadastroCliente(c); //a função tá no EmailService.java
+
+      return c;
    }
 
    public List<Cliente> listarTodos() {
